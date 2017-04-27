@@ -120,6 +120,7 @@ static bool configureCURL(stuUpload* pUpload, int timeout)
         }
         //cookie
         std::string strCookie = CDataHttp::getInstance()->getCookie();
+        log("cookie = %s", strCookie.c_str());
         if (!strCookie.empty())
         {
             strCookie.insert(0, "Cookie: ");
@@ -177,35 +178,6 @@ UploadFile::~UploadFile()
 {
 }
 
-
-void UploadFile::uploadFile(std::string url, std::string fileName,
-                std::string fileCopyName, std::string fileContentType,
-                uploadFinishCallback callBack,
-                const std::map<std::string,std::string>& mapHeadValue,
-                const std::map<std::string,std::string>& mapPostValue,
-                const std::map<std::string,std::string>& mapGetValue
-                )
-{
-    m_dProgress = 0;
-
-    stuUpload* pUpload = new stuUpload(url,
-                                       FileUtils::getInstance()->fullPathForFilename(fileName),
-                                       fileCopyName,
-                                       fileContentType,
-                                       mapHeadValue,
-                                       mapPostValue,
-                                       mapGetValue);
-    
-    pUpload->m_callBackProgress = CC_CALLBACK_1(UploadFile::setUploadProgress, this);
-    pUpload->m_callBackFinsih   = [=](){
-        std::string strResult;
-        strResult.assign(pUpload->m_vecResponseData.begin(), pUpload->m_vecResponseData.end());
-        callBack(strResult);
-    };
-
-    auto t = std::thread(&UploadFile::_threadUpload, this, pUpload);
-    t.detach();
-}
 
 
 void UploadFile::uploadFile(uploadResponse callBack, const stuUpload& upload)
@@ -271,3 +243,4 @@ double UploadFile::getUploadProgress()
     std::lock_guard<std::mutex> lock(m_mutexProgress);
     return m_dProgress;
 }
+

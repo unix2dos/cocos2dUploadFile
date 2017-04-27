@@ -59,17 +59,6 @@ public:
     UploadFile();
     ~UploadFile();
 public:
-    
-    /* 上传文件  */
-    CC_DEPRECATED_ATTRIBUTE void uploadFile(std::string url, std::string fileName,
-                    std::string fileCopyName, std::string fileContentType,
-                    uploadFinishCallback callBack,
-                    const std::map<std::string,std::string>& mapHeadValue,
-                    const std::map<std::string,std::string>& mapPostValue,
-                    const std::map<std::string,std::string>& mapGetValue
-                    );
-    
-    
     /* 上传文件 */
     void uploadFile(uploadResponse callBack, const stuUpload& upload);
     
@@ -91,3 +80,4 @@ private:
 };
 
 #endif /* UploadFile_h */
+
